@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
+import com.jimmy.bankapi.exception.AccountNotFoundException;
+import com.jimmy.bankapi.exception.InsufficientFundsException;
 
 @Service
 public class AccountService {
@@ -39,7 +41,10 @@ public class AccountService {
         Customer customer =
                 customerRepository.findById(
                         request.customerId()
-                ).orElseThrow();
+                ).orElseThrow(() ->
+                new AccountNotFoundException(
+                        "Account not found"
+                ));
 
         Account account = Account.builder()
                 .accountNumber(request.accountNumber())
@@ -60,7 +65,10 @@ public class AccountService {
 
         Account account =
                 accountRepository.findById(accountId)
-                        .orElseThrow();
+                        .orElseThrow(() ->
+                new AccountNotFoundException(
+                        "Account not found"
+                ));
 
         account.setBalance(
                 account.getBalance().add(amount)
@@ -98,11 +106,14 @@ public class AccountService {
 
         Account account =
                 accountRepository.findById(accountId)
-                        .orElseThrow();
+                        .orElseThrow(() ->
+                                new AccountNotFoundException(
+                                        "Account not found"
+                                ));
 
         if (account.getBalance().compareTo(amount) < 0) {
-            throw new RuntimeException(
-                    "Insufficient funds"
+            throw new InsufficientFundsException(
+                    "Account balance is insufficient"
             );
         }
 
@@ -143,15 +154,21 @@ public class AccountService {
 
         Account sourceAccount =
                 accountRepository.findById(sourceAccountId)
-                        .orElseThrow();
+                        .orElseThrow(() ->
+                                new AccountNotFoundException(
+                                        "Account not found"
+                                ));
 
         Account targetAccount =
                 accountRepository.findById(targetAccountId)
-                        .orElseThrow();
+                        .orElseThrow(() ->
+                                new AccountNotFoundException(
+                                        "Account not found"
+                                ));
 
         if (sourceAccount.getBalance().compareTo(amount) < 0) {
-            throw new RuntimeException(
-                    "Insufficient funds"
+            throw new InsufficientFundsException(
+                    "Account balance is insufficient"
             );
         }
 
@@ -213,7 +230,7 @@ public class AccountService {
 
         return accountRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException(
+                        new AccountNotFoundException(
                                 "Account not found: " + id
                         ));
     }
