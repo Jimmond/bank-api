@@ -1,8 +1,10 @@
 package com.jimmy.bankapi.controller;
 
-import com.jimmy.bankapi.dto.CreateCustomerRequest;
+import com.jimmy.bankapi.dto.request.CreateCustomerRequest;
+import com.jimmy.bankapi.dto.response.CustomerResponse;
 import com.jimmy.bankapi.entity.Customer;
 import com.jimmy.bankapi.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,13 +23,21 @@ public class CustomerController {
 
     @PostMapping
     public Customer createCustomer(
+            @Valid
             @RequestBody CreateCustomerRequest request
     ) {
         return customerService.createCustomer(request);
     }
 
     @GetMapping
-    public List<Customer> getAllCustomers() {
+    public List<CustomerResponse> getAllCustomers() {
         return customerService.getAllCustomers();
+    }
+    @GetMapping("/{id}")
+    public CustomerResponse getCustomerById(
+            @PathVariable Long id
+    ) {
+
+        return customerService.getCustomerById(id);
     }
 }

@@ -1,6 +1,6 @@
 package com.jimmy.bankapi.service;
 
-import com.jimmy.bankapi.dto.CreateAccountRequest;
+import com.jimmy.bankapi.dto.request.CreateAccountRequest;
 import com.jimmy.bankapi.entity.Account;
 import com.jimmy.bankapi.entity.Customer;
 import com.jimmy.bankapi.entity.TransactionHistory;
@@ -15,6 +15,8 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 import com.jimmy.bankapi.exception.AccountNotFoundException;
 import com.jimmy.bankapi.exception.InsufficientFundsException;
+import com.jimmy.bankapi.dto.response.AccountResponse;
+import com.jimmy.bankapi.mapper.AccountMapper;
 
 @Service
 public class AccountService {
@@ -55,8 +57,14 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public List<Account> getAllAccounts() {
-        return accountRepository.findAll();
+    public List<AccountResponse> getAllAccounts() {
+
+        List<Account> accounts =
+                accountRepository.findAll();
+
+        return AccountMapper.toResponseList(
+                accounts
+        );
     }
     public Account deposit(
             Long accountId,
@@ -226,13 +234,16 @@ public class AccountService {
         );
     }
 
-    public Account getAccountById(Long id) {
+    public AccountResponse getAccountById(Long id) {
 
-        return accountRepository.findById(id)
-                .orElseThrow(() ->
-                        new AccountNotFoundException(
-                                "Account not found: " + id
-                        ));
+        Account account =
+                accountRepository.findById(id)
+                        .orElseThrow(() ->
+                                new AccountNotFoundException(
+                                        "Account not found: " + id
+                                ));
+
+        return AccountMapper.toResponse(account);
     }
     public Account getByAccountNumber(
             String accountNumber

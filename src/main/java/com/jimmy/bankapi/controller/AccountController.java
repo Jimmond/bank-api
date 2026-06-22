@@ -1,14 +1,16 @@
 package com.jimmy.bankapi.controller;
 
-import com.jimmy.bankapi.dto.CreateAccountRequest;
+import com.jimmy.bankapi.dto.request.CreateAccountRequest;
 import com.jimmy.bankapi.entity.Account;
 import com.jimmy.bankapi.entity.TransactionHistory;
 import com.jimmy.bankapi.service.AccountService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import com.jimmy.bankapi.dto.DepositRequest;
+import com.jimmy.bankapi.dto.request.DepositRequest;
 import java.util.List;
-import com.jimmy.bankapi.dto.WithdrawRequest;
-import com.jimmy.bankapi.dto.TransferRequest;
+import com.jimmy.bankapi.dto.request.WithdrawRequest;
+import com.jimmy.bankapi.dto.request.TransferRequest;
+import com.jimmy.bankapi.dto.response.AccountResponse;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -24,17 +26,19 @@ public class AccountController {
 
     @PostMapping
     public Account createAccount(
+            @Valid
             @RequestBody CreateAccountRequest request
     ) {
         return accountService.createAccount(request);
     }
 
     @GetMapping
-    public List<Account> getAllAccounts() {
+    public List<AccountResponse> getAllAccounts() {
         return accountService.getAllAccounts();
     }
     @PostMapping("/{id}/deposit")
     public Account deposit(
+            @Valid
             @PathVariable Long id,
             @RequestBody DepositRequest request
     ) {
@@ -46,6 +50,7 @@ public class AccountController {
     }
     @PostMapping("/{id}/withdraw")
     public Account withdraw(
+            @Valid
             @PathVariable Long id,
             @RequestBody WithdrawRequest request
     ) {
@@ -57,6 +62,7 @@ public class AccountController {
     }
     @PostMapping("/transfer")
     public String transfer(
+            @Valid
             @RequestBody TransferRequest request
     ) {
 
@@ -69,7 +75,7 @@ public class AccountController {
         return "Transfer completed successfully";
     }
     @GetMapping("/{id}")
-    public Account getAccountById(
+    public AccountResponse getAccountById(
             @PathVariable Long id
     ) {
 

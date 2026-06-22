@@ -2,6 +2,7 @@ package com.jimmy.bankapi.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 
@@ -51,6 +52,26 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(
                 "INTERNAL_ERROR",
                 ex.getMessage(),
+                LocalDateTime.now()
+        );
+    }
+    @ExceptionHandler(
+            MethodArgumentNotValidException.class
+    )
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidation(
+            MethodArgumentNotValidException ex
+    ) {
+
+        String message =
+                ex.getBindingResult()
+                        .getFieldErrors()
+                        .getFirst()
+                        .getDefaultMessage();
+
+        return new ErrorResponse(
+                "VALIDATION_ERROR",
+                message,
                 LocalDateTime.now()
         );
     }
