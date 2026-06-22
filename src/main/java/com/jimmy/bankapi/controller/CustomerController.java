@@ -6,6 +6,7 @@ import com.jimmy.bankapi.entity.Customer;
 import com.jimmy.bankapi.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class CustomerController {
     ) {
         return customerService.createCustomer(request);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<CustomerResponse> getAllCustomers() {
         return customerService.getAllCustomers();

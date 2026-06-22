@@ -2,6 +2,9 @@ package com.jimmy.bankapi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import com.jimmy.bankapi.entity.Role;
 
 @Entity
 @Table(name = "users")
@@ -21,5 +24,6 @@ public class AppUser {
 
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

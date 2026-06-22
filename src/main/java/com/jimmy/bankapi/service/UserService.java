@@ -2,6 +2,7 @@ package com.jimmy.bankapi.service;
 
 import com.jimmy.bankapi.dto.request.RegisterRequest;
 import com.jimmy.bankapi.entity.AppUser;
+import com.jimmy.bankapi.entity.Role;
 import com.jimmy.bankapi.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class UserService {
                                 request.password()
                         )
                 )
-                .role("USER")
+                .role(Role.USER)
                 .build();
 
         return userRepository.save(user);
