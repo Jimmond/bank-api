@@ -1,49 +1,188 @@
 # Bank API
 
-Banking Management System built with Java 21, Spring Boot, PostgreSQL and JPA.
+Sistema bancario desarrollado con Java y Spring Boot que permite gestionar clientes, cuentas bancarias, depósitos, retiros, transferencias y autenticación segura mediante JWT.
 
-## Features
-
-* Customer Management
-* Account Management
-* Deposits
-* Withdrawals
-* Transfers
-* Transaction History
-* PostgreSQL Persistence
-* REST API
-
-## Tech Stack
+## Tecnologías utilizadas
 
 * Java 21
-* Spring Boot 3.5
+* Spring Boot 3.5.3
+* Spring Security
+* JWT Authentication
 * Spring Data JPA
 * Hibernate
 * PostgreSQL
+* Swagger / OpenAPI
+* Docker
+* Docker Compose
 * Maven
-* Lombok
 
-## Endpoints
+## Características
 
-### Customers
+### Gestión de Clientes
 
-* POST /api/customers
-* GET /api/customers
+* Crear clientes
+* Consultar clientes
+* Buscar cliente por ID
 
-### Accounts
+### Gestión de Cuentas
 
-* POST /api/accounts
-* GET /api/accounts
-* GET /api/accounts/{id}
-* GET /api/accounts/number/{accountNumber}
+* Crear cuentas bancarias
+* Consultar cuentas
+* Buscar cuenta por ID
+* Buscar cuenta por número
 
-### Transactions
+### Operaciones Bancarias
 
-* POST /api/accounts/{id}/deposit
-* POST /api/accounts/{id}/withdraw
-* POST /api/accounts/transfer
-* GET /api/accounts/{id}/transactions
+* Depósitos
+* Retiros
+* Transferencias entre cuentas
+* Historial de transacciones
 
-## Author
+### Seguridad
+
+* Registro de usuarios
+* Login
+* JWT Authentication
+* Roles USER y ADMIN
+* Endpoints protegidos
+* Respuestas personalizadas 401 y 403
+
+---
+
+## Ejecutar con Docker
+
+### Requisitos
+
+* Docker
+* Docker Compose
+
+### Levantar la aplicación
+
+```bash
+docker compose up --build
+```
+
+La aplicación estará disponible en:
+
+http://localhost:8080
+
+---
+
+## Swagger
+
+Documentación interactiva:
+
+http://localhost:8080/swagger-ui/index.html
+
+---
+
+## Credenciales
+
+Primero registra un usuario utilizando:
+
+POST /api/auth/register
+
+Ejemplo:
+
+```json
+{
+  "username": "admin",
+  "password": "123456"
+}
+```
+
+Luego inicia sesión:
+
+POST /api/auth/login
+
+```json
+{
+  "username": "admin",
+  "password": "123456"
+}
+```
+
+Obtendrás un JWT:
+
+```json
+{
+  "token": "eyJhbGciOi..."
+}
+```
+
+Utiliza el token en los endpoints protegidos:
+
+```text
+Authorization: Bearer <TOKEN>
+```
+
+---
+
+## Arquitectura
+
+```text
+Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+PostgreSQL
+```
+
+Seguridad:
+
+```text
+JWT Filter
+    ↓
+Spring Security
+    ↓
+Role Based Authorization
+```
+
+---
+
+## Base de Datos
+
+La base de datos PostgreSQL se crea automáticamente mediante Docker Compose.
+
+Contenedores:
+
+* bank-api
+* bank-postgres
+
+---
+
+## Ejecutar localmente sin Docker
+
+### Configurar PostgreSQL
+
+Crear base de datos:
+
+```sql
+CREATE DATABASE bank_db;
+```
+
+### Ejecutar aplicación
+
+```bash
+./mvnw spring-boot:run
+```
+
+### Compilar
+
+```bash
+./mvnw clean package
+```
+
+### Ejecutar JAR
+
+```bash
+java -jar target/bank-api-0.0.1-SNAPSHOT.jar
+```
+
+---
+
+## Autor
 
 Jimmy Ortiz
